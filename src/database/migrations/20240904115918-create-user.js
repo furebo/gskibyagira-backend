@@ -21,11 +21,14 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      password: {
+      hashedpassword: {
         type: Sequelize.STRING
       },
       role: {
         type: Sequelize.STRING
+      },
+      isVerified:{
+        type:Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

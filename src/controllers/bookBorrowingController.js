@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import model from '../database/models';
+import Sequelize from 'sequelize';
 
 const BookBorrowing = model.bookborrowing;
 
@@ -53,6 +54,28 @@ const allBorrowedBooks = async (req,res)=>{
       })
     }
 }
+//controller to get the borrowed books grouped by bookType 
+const allBorrowedBooksByType = async (req, res) => {
+  try {
+      // Query to get count of borrowed books grouped by bookType
+      const response = await BookBorrowing.findAll({
+          attributes: ['Book_Type', [Sequelize.fn('COUNT', Sequelize.col('Book_Type')), 'count']],
+          group: ['Book_Type'],  // Group by bookType
+      });
+
+      if (response) {
+          return res.status(200).json({
+              message: "Borrowed books found grouped by bookType",
+              data: response
+          });
+      }
+      return res.status(404).json({ message: "No records found" });
+  } catch (err) {
+      res.status(500).json({
+          error: err.message
+      });
+  }
+};
 
 const deleteBorrowedBook = async (req, res) => {
     try {
@@ -100,4 +123,4 @@ const updateBorrowedBook = async (req, res) => {
     }
 };
 
-export {BorrowBook,allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook}
+export {BorrowBook,allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType}

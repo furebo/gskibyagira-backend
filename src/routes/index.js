@@ -5,6 +5,7 @@ import userRoutes from './userRoutes';
 import staffRoutes from './StaffRoutes';
 import createBookRoutes from './BookRoutes';
 import messageRoutes from './MessageRoutes';
+import userLoginRoutes from './UserLoginRoutes'
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/users',userRoutes);
 router.use('/staffs',staffRoutes);
 router.use('/books',createBookRoutes);
 router.use('/messages',messageRoutes);
+router.use('/',userLoginRoutes);
 
 export default router;

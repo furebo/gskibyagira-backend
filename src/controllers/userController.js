@@ -1,17 +1,20 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import generatePassword from '../helpers/generatePassword';
+const jwt = require('jsonwebtoken');
+//import generatePassword from '../helpers/generatePassword';
 import { sendEmail } from '../helpers/sendEmail';
+import { sendVerificationEmail } from '../Middlewares/SendEmail';
 import model from '../database/models';
+import { template } from '../utils/emailVerificationtemplate';
 
 const User = model.user;
 
 dotenv.config();
 // the function to register a user
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, role } = req.body;
-  const userpassword = generatePassword();
-  const password = await bcrypt.hash(userpassword, 12);
+  const { firstName, lastName, email, password,role } = req.body;
+  //const userpassword = generatePassword();
+  //console.log("The user password frpm generatePassword() is ", userpassword)
   const frontendUrl = process.env.FRONTEND_URL;
  
   if (firstName === '' || lastName === '' || email === '' ||password === '') {
@@ -23,7 +26,7 @@ const registerUser = async (req, res) => {
       message:'email_invalid',
     });
   } 
-
+  const hashedpassword = await bcrypt.hash(password, 12);
   User.findOne({
     where: {
       email,
@@ -33,37 +36,33 @@ const registerUser = async (req, res) => {
       return res.status(400).json({
         message: 'The user with this email already exist!',
       });
-    }
-    return User.create({
+    }else{
+      
+    User.create({
       firstName,
       lastName,
       email,
-      role,
-      password,
+      hashedpassword,
+      role
     })
-      .then((data) => {
-        if (data) {
-          const query = encodeURIComponent(
-            `email=${data.email}&password=${userpassword}`
-          );
-  
-          const html = `
-              <h2>Your account has been registered. you can now login in</h2>
-              <a href="${frontendUrl}/login?${query}">here</a>
-              <p>${req.body.email}. Note that your login password will be <em>${userpassword}</em></p>
-              `;
-          sendEmail({from:'furebodidace582@gmail.com', to: data.email, subject: 'Registration', html, pass:'bamurangekayitani123' });
-          res.status(201).json({
-            message:'You are successfully registered.',
-            data,
-          });
-        }
-      })
-      .catch((err) => {
+      .then((user1) => {
+        const token = jwt.sign(JSON.parse(JSON.stringify(user1)), process.env.JWT_SECRET, { expiresIn: '1h' });
+        jwt.verify(token, process.env.JWT_SECRET, () => {});
+        
+        console.log('Calling sendVerificationEmail...');
+        sendVerificationEmail(user1.firstName, user1.email, token);
+        res.status(201).json({
+          message:'You are registered, Please check your email to verify your account',
+          user_details: user1,
+          token: `JWT ${token}`
+        });
+      }).catch((err) => {
         res.status(400).json({
           error: err.message,
         });
       });
+     
+    }
   });
 };
 
@@ -160,4 +159,55 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export {registerUser,getAllUsers,editUser,deleteUser}
+// Login Controller
+const loginUser = async (req, res) => {
+  const { email, password} = req.body;
+
+  try {
+    // Check if the user exists in the database
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    console.log(user);
+    // Validate the password using bcrypt
+    const isMatch = await bcrypt.compare(password, user.hashedpassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role:user.role },
+      'secret', // Replace with your JWT secret key
+      { expiresIn: '1h' } // Token expires in 1 hour
+    );
+
+    // Return the token to the client
+    res.status(200).json({ message: 'Login successful', token });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+//verifying the user 
+ const verifyUser = async (req, res) => {
+  try {
+    jwt.verify(req.params.token, process.env.JWT_KEY);
+
+    const user = jwt.decode(req.params.token);
+    const userEmail = await model.User.findOne({ where: { email: user.email } });
+
+    if (userEmail.isVerified === true) {
+      res.status(400).send(template(user.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
+    }
+    await model.User.update({ isVerified: true }, { where: { email: user.email } });
+    res.status(200).redirect('http://localhost:3000/login');
+  } catch (error) {
+    res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));
+  }
+};
+
+export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser}

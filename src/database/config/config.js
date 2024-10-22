@@ -20,4 +20,10 @@ module.exports = {
     dialect: 'postgres',
   },
 };
-
+//database on superbase
+//postgresql://postgres.ozestuweksognkrrrudx:Bamurange@123@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+//Host:aws-0-eu-central-1.pooler.supabase.com
+//Database name:postgres
+//Port:6543
+//User:postgres.ozestuweksognkrrrudx
+//Password:Bamurange@123

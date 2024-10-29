@@ -10,7 +10,7 @@ const PORT  = process.env.PORT;
 //require('./src/services/auth');
 
 // Set up Sequelize
-const sequelize = new Sequelize('lmis', 'postgres', null, {
+const sequelize = new Sequelize('lmis', 'postgres', 'furebo123', {
     host: 'localhost',
     dialect: 'postgres'
 });

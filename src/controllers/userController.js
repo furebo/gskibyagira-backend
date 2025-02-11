@@ -166,9 +166,17 @@ const loginUser = async (req, res) => {
   try {
     // Check if the user exists in the database
     const user = await User.findOne({ where: { email } });
+    console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    //Check if the email is verified in the database.
+    if(user.dataValues.isVerified == null){
+      console.log("The Email is not verified.")
+      //return res.status(404).json({message:"Email is not verified. Please verify your Email to login."})
+    return;
+    }
+
     console.log(user);
     // Validate the password using bcrypt
     const isMatch = await bcrypt.compare(password, user.hashedpassword);
@@ -204,10 +212,23 @@ const loginUser = async (req, res) => {
       res.status(400).send(template(user.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
     }
     await model.User.update({ isVerified: true }, { where: { email: user.email } });
-    res.status(200).redirect('http://localhost:3000/login');
+    //res.status(200).redirect('http://localhost:3000/login');
   } catch (error) {
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));
   }
 };
+
+//let try to test the functionalities of ES6 rest operator
+
+function Sum(...numbers){
+  let total=0;
+  for(const num of numbers){
+   
+    total += num;
+  }
+  return total
+}
+
+console.log(Sum(1,2,3,4))
 
 export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser}

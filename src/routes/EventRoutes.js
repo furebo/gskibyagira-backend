@@ -1,5 +1,5 @@
 import express from 'express';
-import { CreateEvent,allEvents,allActiveEventsForSliderData,updateEvent, deleteEvent } from '../controllers/eventController';
+import { CreateEvent,allEvents,allActiveEventsForSliderData,updateEvent, deleteEvent } from '../controllers/eventController.js';
 
 const router = express.Router();
 

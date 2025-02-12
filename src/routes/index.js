@@ -1,11 +1,11 @@
 import express from 'express';
-import bookRoutes from './BorrowBookRoutes';
-import eventRoutes from './EventRoutes';
-import userRoutes from './userRoutes';
-import staffRoutes from './StaffRoutes';
-import createBookRoutes from './BookRoutes';
-import messageRoutes from './MessageRoutes';
-import userLoginRoutes from './UserLoginRoutes'
+import bookRoutes from './BorrowBookRoutes.js';
+import eventRoutes from './EventRoutes.js';
+import userRoutes from './userRoutes.js';
+import staffRoutes from './StaffRoutes.js';
+import createBookRoutes from './BookRoutes.js';
+import messageRoutes from './MessageRoutes.js';
+import userLoginRoutes from './UserLoginRoutes.js'
 
 const router = express.Router();
 

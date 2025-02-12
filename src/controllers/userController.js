@@ -2,10 +2,10 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 const jwt = require('jsonwebtoken');
 //import generatePassword from '../helpers/generatePassword';
-import { sendEmail } from '../helpers/sendEmail';
-import { sendVerificationEmail } from '../Middlewares/SendEmail';
-import model from '../database/models';
-import { template } from '../utils/emailVerificationtemplate';
+//import { sendEmail } from '../helpers/sendEmail';
+import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
+import model from '../database/models/index.js';
+import { template } from '../utils/emailVerificationtemplate.js';
 
 const User = model.user;
 

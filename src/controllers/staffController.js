@@ -1,5 +1,5 @@
-import models from '../database/models';
-import upload from '../utils/multer'; // Import the multer setup with Cloudinary
+import models from '../database/models/index.js';
+import upload from '../utils/multer.js'; // Import the multer setup with Cloudinary
 
 const staff = models.staff;
 //controller to create an event

@@ -1,6 +1,8 @@
-require('dotenv').config(); // Load .env file
+//require('dotenv').config(); // Load .env file
+import dotenv from 'dotenv';
+dotenv.config();
 
-module.exports = {
+export default {
   development: {
     username: "postgres",
     password: "furebo123",

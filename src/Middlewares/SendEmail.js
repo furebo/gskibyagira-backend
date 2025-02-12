@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-const { google } = require('googleapis');
-import { template } from '../utils/emailVerificationtemplate';
+//const { google } = require('googleapis');
+import { google } from 'googleapis';
+import { template } from '../utils/emailVerificationtemplate.js';
 
 dotenv.config();
 

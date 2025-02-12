@@ -1,5 +1,5 @@
 import express from 'express';
-import { BorrowBook, allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType } from '../controllers/bookBorrowingController';
+import { BorrowBook, allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType } from '../controllers/bookBorrowingController.js';
 
 
 const router = express.Router();

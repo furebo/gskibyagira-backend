@@ -1,21 +1,21 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class book extends Model {
+import { Model, DataTypes } from 'sequelize';
+
+export default (sequelize) => {
+  class Book extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // Define associations here
     }
   }
-  book.init({
+
+  Book.init({
     id: { 
-      type:DataTypes.UUID,
+      type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     deliveryDate: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'book',
+    modelName: 'Book', // Updated model name to PascalCase
   });
-  return book;
+
+  return Book;
 };

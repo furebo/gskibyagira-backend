@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { parse } from 'pg-connection-string';
+import  parse  from 'pg-connection-string';
 import express from 'express';
 import bodyParser from 'body-parser';
-import routes from './src/routes';
+import routes from './src/routes/index.js';
 import Sequelize from 'sequelize';
 import cors from 'cors';
 

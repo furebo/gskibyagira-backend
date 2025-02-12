@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import model from '../database/models';
+import model from '../database/models/index.js';
 
 const Message = model.message;
 

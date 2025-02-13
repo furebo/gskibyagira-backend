@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 //import generatePassword from '../helpers/generatePassword';
 //import { sendEmail } from '../helpers/sendEmail';
 import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
-//import model from '../database/models/index.js';
 import db from '../database/models/index.js';
 import { template } from '../utils/emailVerificationtemplate.js';
 const { User } = db;  // Extract the User model
+
 
 dotenv.config();
 // the function to register a user
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
     });
   } 
   const hashedpassword = await bcrypt.hash(password, 12);
-  user.findOne({
+  User.findOne({
     where: {
       email,
     },
@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
       });
     }else{
       
-    user.create({
+    User.create({
       firstName,
       lastName,
       email,
@@ -114,7 +114,7 @@ const editUser = async (req, res) => {
 
   try {
     // Find the user by ID
-    const user = await user.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id } });
 
     if (!user) {
       return res.status(404).json({
@@ -145,13 +145,13 @@ const deleteUser = async (req, res) => {
   try {
       const { id } = req.params; // Assuming the ID is passed as a route parameter
 
-      const user = await user.findOne({ where: { id } });
+      const user = await User.findOne({ where: { id } });
 
       if (!user) {
           return res.status(404).json({ message: "User record not found." });
       }
 
-      await user.destroy({
+      await User.destroy({
           where: { id }
       });
 
@@ -167,7 +167,7 @@ const loginUser = async (req, res) => {
 
   try {
     // Check if the user exists in the database
-    const user = await user.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
     console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

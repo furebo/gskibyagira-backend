@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 // Check current environment
 const isProduction = process.env.NODE_ENV === 'production';
+console.log("let check the environment is isProduction: ",isProduction)
 
 console.log("Current Environment:", process.env.NODE_ENV);
 console.log("Database URL:", process.env.DATABASE_URL);

@@ -126,11 +126,13 @@ const allEvents = async (req,res)=>{
 
 const allActiveEventsForSliderData = async (req,res)=>{
   try {
-    const response = await event.findAll({
-      where: {
-        is_active: 'Yes'  // Filter for active events
+    const response = await event.findAll(
+      {
+        where: {
+          is_active: 'Yes'  // Filter for active events
+        }
       }
-    });
+    );
     if(response){
       return res.status(200).json({
         message:"All events are found well",

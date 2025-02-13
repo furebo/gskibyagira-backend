@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 //import generatePassword from '../helpers/generatePassword';
 //import { sendEmail } from '../helpers/sendEmail';
 import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
-import model from '../database/models/index.js';
+//import model from '../database/models/index.js';
+import db from '../database/models/index.js';
 import { template } from '../utils/emailVerificationtemplate.js';
-
-const User = model.user;
+const { User } = db;  // Extract the User model
 
 dotenv.config();
 // the function to register a user
@@ -27,7 +28,7 @@ const registerUser = async (req, res) => {
     });
   } 
   const hashedpassword = await bcrypt.hash(password, 12);
-  User.findOne({
+  user.findOne({
     where: {
       email,
     },
@@ -38,7 +39,7 @@ const registerUser = async (req, res) => {
       });
     }else{
       
-    User.create({
+    user.create({
       firstName,
       lastName,
       email,
@@ -72,6 +73,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.findAll({
       attributes: ['id', 'firstName', 'lastName', 'email', 'role'], // Include the fields you want to retrieve
     });
+    console.log('All users are :',users)
 
     if (users.length === 0) {
       return res.status(404).json({
@@ -112,7 +114,7 @@ const editUser = async (req, res) => {
 
   try {
     // Find the user by ID
-    const user = await User.findOne({ where: { id } });
+    const user = await user.findOne({ where: { id } });
 
     if (!user) {
       return res.status(404).json({
@@ -122,7 +124,7 @@ const editUser = async (req, res) => {
     const updatedUserRecord = req.body
     console.log("The request from body is this one :",updatedUserRecord)
 
-    const updatedrecord = await User.update(updatedUserRecord,{
+    const updatedrecord = await user.update(updatedUserRecord,{
         where: { id }
     });
     // Respond with the updated user details
@@ -143,13 +145,13 @@ const deleteUser = async (req, res) => {
   try {
       const { id } = req.params; // Assuming the ID is passed as a route parameter
 
-      const user = await User.findOne({ where: { id } });
+      const user = await user.findOne({ where: { id } });
 
       if (!user) {
           return res.status(404).json({ message: "User record not found." });
       }
 
-      await User.destroy({
+      await user.destroy({
           where: { id }
       });
 
@@ -165,7 +167,7 @@ const loginUser = async (req, res) => {
 
   try {
     // Check if the user exists in the database
-    const user = await User.findOne({ where: { email } });
+    const user = await user.findOne({ where: { email } });
     console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

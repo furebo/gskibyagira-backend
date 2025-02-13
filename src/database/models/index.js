@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
 import process from 'process';
-import { fileURLToPath,pathToFileURL } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 dotenv.config();
 
@@ -28,46 +28,32 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Dynamically import models
-/*
-const files = fs.readdirSync(__dirname).filter(file => {
-  return (
-    file.indexOf('.') !== 0 &&
-    file !== basename &&
-    file.slice(-3) === '.js' &&
-    file.indexOf('.test.js') === -1
-  );
-});
-*/
-// Assuming sequelize and db are already defined
+// Load all models dynamically
 const files = fs.readdirSync(__dirname).filter(file => file.endsWith('.js'));
-/*
-for (const file of files) {
-  const { default: model } = await import(path.join(__dirname, file));
-  db[model.name] = model(sequelize, Sequelize.DataTypes);
-}
-*/
 
-for (const file of files) {
-  // Convert the file path to a file:// URL
-  const fileURL = pathToFileURL(path.join(__dirname, file)).href;
-  
-  // Dynamically import the module
-  const { default: model } = await import(fileURL);
-  
-  // Add the model to the db object
-  db[model.name] = model(sequelize, Sequelize.DataTypes);
-}
-// Handle model associations
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+// **Wrap everything inside an async function and await it**
+const loadModels = async () => {
+  for (const file of files) {
+    const fileURL = pathToFileURL(path.join(__dirname, file)).href;
+    const { default: modelFactory } = await import(fileURL); // modelFactory is a function
+    const model = modelFactory(sequelize); // Call the function to get the model
+    db[model.name] = model; // ✅ Now storing model in db
   }
-});
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+  // Handle model associations **after models are loaded**
+  Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
+  });
 
+  db.sequelize = sequelize;
+  db.Sequelize = Sequelize;
+
+  console.log('Loaded models:', Object.keys(db));
+};
+
+await loadModels(); // ✅ Wait for models to load **before exporting**
 export default db;
 
 //database on superbase

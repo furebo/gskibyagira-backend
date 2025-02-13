@@ -12,7 +12,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 
 // Import the config file
@@ -28,19 +27,21 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-// Load all models dynamically
-const files = fs.readdirSync(__dirname).filter(file => file.endsWith('.js'));
+// **Load all models asynchronously inside an IIFE**
+(async () => {
+  const files = fs.readdirSync(__dirname).filter(file => file.endsWith('.js'));
 
-// **Wrap everything inside an async function and await it**
-const loadModels = async () => {
   for (const file of files) {
+    if (file === 'index.js') continue; // 🚨 Avoid importing index.js itself
+
     const fileURL = pathToFileURL(path.join(__dirname, file)).href;
     const { default: modelFactory } = await import(fileURL); // modelFactory is a function
     const model = modelFactory(sequelize); // Call the function to get the model
-    db[model.name] = model; // ✅ Now storing model in db
+    db[model.name] = model; // ✅ Store model in db
   }
 
-  // Handle model associations **after models are loaded**
+  // **Handle model associations after all models are loaded**
+  console.log('✅ Loaded models before foraeach:', Object.keys(db));
   Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
       db[modelName].associate(db);
@@ -50,10 +51,9 @@ const loadModels = async () => {
   db.sequelize = sequelize;
   db.Sequelize = Sequelize;
 
-  console.log('Loaded models:', Object.keys(db));
-};
+  console.log('✅ Loaded models:', Object.keys(db));
+})();
 
-await loadModels(); // ✅ Wait for models to load **before exporting**
 export default db;
 
 //database on superbase

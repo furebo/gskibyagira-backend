@@ -1,3 +1,8 @@
+console.log("🚀 Starting application...");
+import db from './src/database/models/index.js';
+console.log("✅ Database models loaded:", Object.keys(db));
+
+
 import dotenv from 'dotenv';
 dotenv.config();
 import  parse  from 'pg-connection-string';

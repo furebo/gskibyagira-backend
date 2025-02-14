@@ -1,7 +1,7 @@
 'use strict';
 import {Model,DataTypes} from 'sequelize';
 export default (sequelize) => {
-  class User extends Model {
+  class user extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ export default (sequelize) => {
       // define association here
     }
   }
-  User.init({
+  user.init({
     id: { 
       type:DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -25,7 +25,7 @@ export default (sequelize) => {
     isVerified:DataTypes.BOOLEAN,
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'user',
   });
-  return User;
+  return user;
 };

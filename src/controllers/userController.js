@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 //import generatePassword from '../helpers/generatePassword';
 //import { sendEmail } from '../helpers/sendEmail';
 import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
-//import model from '../database/models/index.js';
 import db from '../database/models/index.js';
 import { template } from '../utils/emailVerificationtemplate.js';
-const { User } = db;  // Extract the User model
+const { user } = db;  // Extract the User model
+
 
 dotenv.config();
 // the function to register a user
@@ -70,7 +70,7 @@ const registerUser = async (req, res) => {
 //the function to get all users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll({
+    const users = await user.findAll({
       attributes: ['id', 'firstName', 'lastName', 'email', 'role'], // Include the fields you want to retrieve
     });
     console.log('All users are :',users)

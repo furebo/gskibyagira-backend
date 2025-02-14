@@ -17,8 +17,6 @@ const env = process.env.NODE_ENV || 'development';
 // Import the config file
 import configFile from '../config/config.js';
 const config = configFile[env];
-console.log("the config file is :",config);
-
 const db = {};
 
 let sequelize;
@@ -29,7 +27,7 @@ if (config.use_env_variable) {
 }
 
 // **Load all models asynchronously inside an IIFE**
-let myfunction = async () => {
+let models_loader_function = async () => {
   const files = fs.readdirSync(__dirname).filter(file => file.endsWith('.js'));
 
   for (const file of files) {
@@ -40,9 +38,7 @@ let myfunction = async () => {
     const model = modelFactory(sequelize); // Call the function to get the model
     db[model.name] = model; // ✅ Store model in db
   }
-
   // **Handle model associations after all models are loaded**
-  console.log('✅ Loaded models before foraeach:', Object.keys(db));
   Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
       db[modelName].associate(db);
@@ -51,12 +47,10 @@ let myfunction = async () => {
 
   db.sequelize = sequelize;
   db.Sequelize = Sequelize;
-
-  console.log('✅ Loaded models:', Object.keys(db));
 };
 
-await myfunction();
-console.log('✅ Loaded models before export :', Object.keys(db));
+await models_loader_function();
+
 export default db;
 
 //database on superbase

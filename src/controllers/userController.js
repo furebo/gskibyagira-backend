@@ -16,7 +16,7 @@ const registerUser = async (req, res) => {
   const { firstName, lastName, email, password,role } = req.body;
   //const userpassword = generatePassword();
   //console.log("The user password frpm generatePassword() is ", userpassword)
-  const frontendUrl = process.env.FRONTEND_URL;
+  //const frontendUrl = process.env.FRONTEND_URL;
  
   if (firstName === '' || lastName === '' || email === '' ||password === '') {
     return res.status(500).json({
@@ -50,7 +50,7 @@ const registerUser = async (req, res) => {
         const token = jwt.sign(JSON.parse(JSON.stringify(user1)), process.env.JWT_SECRET, { expiresIn: '1h' });
         jwt.verify(token, process.env.JWT_SECRET, () => {});
         
-        console.log('Calling sendVerificationEmail...');
+        //console.log('Calling sendVerificationEmail...');
         sendVerificationEmail(user1.firstName, user1.email, token);
         res.status(201).json({
           message:'You are registered, Please check your email to verify your account',

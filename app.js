@@ -54,7 +54,7 @@ async function testDatabaseConnection() {
 }
 testDatabaseConnection();
 */
-const connectWithRetry = async (retries = 10, delay = 10000) => {
+const connectWithRetry = async (retries = 10, delay = 30000) => {
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
             await sequelize.authenticate();

@@ -1,8 +1,3 @@
-console.log("🚀 Starting application...");
-import db from './src/database/models/index.js';
-console.log("✅ Database models loaded:", Object.keys(db));
-
-
 import dotenv from 'dotenv';
 dotenv.config();
 import  parse  from 'pg-connection-string';
@@ -26,13 +21,20 @@ console.log("Database URL:", process.env.DATABASE_URL);
 let sequelize;
 
 if (isProduction) {
-    // Parse and configure Sequelize with the Supabase database URL
     const config = parse(process.env.DATABASE_URL);
-    config.dialect = 'postgres';
-    config.ssl = { require: true, rejectUnauthorized: false };
-    
-    sequelize = new Sequelize(config);
-} else {
+    sequelize = new Sequelize(config.database, config.user, config.password, {
+        host: config.host,
+        dialect: 'postgres',
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        },
+        logging: false, // Optional: Disable SQL logs in production
+    });
+}
+ else {
     // Set up Sequelize for the local database
     sequelize = new Sequelize('lmis', 'postgres', 'furebo123', {
         host: 'localhost',

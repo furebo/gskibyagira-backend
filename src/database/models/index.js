@@ -60,3 +60,4 @@ export default db;
 //Port:6543
 //User:postgres.ozestuweksognkrrrudx
 //Password:Bamurange@123
+//postgresql://postgres:Bamurange@123@db.ozestuweksognkrrrudx.supabase.co:5432/postgres

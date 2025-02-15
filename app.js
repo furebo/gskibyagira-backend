@@ -86,23 +86,27 @@ console.log("🌍 Database URL:", process.env.DATABASE_URL);
 let sequelize;
 
 if (isProduction) {
-    const config = parse(process.env.DATABASE_URL);
-    sequelize = new Sequelize(config.database, config.user, config.password, {
-        host: config.host,
+    if (!process.env.DATABASE_URL) {
+        console.error("❌ DATABASE_URL is not set in the environment variables!");
+        process.exit(1);
+    }
+
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: 'postgres',
+        protocol: 'postgres',
         dialectOptions: {
             ssl: {
                 require: true,
                 rejectUnauthorized: false
             }
         },
-        logging: false, // Optional: Disable SQL logs in production
+        logging: false
     });
 } else {
-    // Local development database
     sequelize = new Sequelize('lmis', 'postgres', 'furebo123', {
         host: 'localhost',
         dialect: 'postgres',
+        logging: console.log
     });
 }
 

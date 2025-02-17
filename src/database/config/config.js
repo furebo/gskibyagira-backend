@@ -27,8 +27,8 @@ export default {
     dialectModule: pg,
     dialectOptions: {
       ssl: {
-        require: true,
-        rejectUnauthorized: false,
+        // require: true,
+        // rejectUnauthorized: false,
       },
     },
   },

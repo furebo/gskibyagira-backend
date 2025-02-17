@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-  "node": "18.x"
-},
+    "node": "18.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -L- --exec babel-node app.js",
@@ -38,7 +38,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
     "path": "^0.12.7",
-    "pg": "^8.11.3",
+    "pg": "^8.13.3",
     "postgres": "^3.4.3",
     "sequelize": "^6.36.0",
     "sequelize-cli": "^6.6.2",

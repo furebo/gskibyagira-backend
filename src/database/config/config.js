@@ -1,5 +1,6 @@
 //require('dotenv').config(); // Load .env file
 import dotenv from 'dotenv';
+import pg from "pg";
 dotenv.config();
 
 export default {
@@ -23,6 +24,7 @@ export default {
   production: {
     url: process.env.DATABASE_URL,
     dialect: 'postgres',
+    dialectModule: pg,
     dialectOptions: {
       ssl: {
         require: true,

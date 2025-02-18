@@ -34,33 +34,11 @@ if (isProduction) {
     )
 }
 
-// const connectWithRetry = async (retries = 10, delay = 30000) => {
-//     for (let attempt = 1; attempt <= retries; attempt++) {
-//         try {
-//             await sequelize.authenticate();
-//             console.log(`✅ Database connected successfully on attempt ${attempt}`);
-//             return;
-//         } catch (error) {
-//             console.error(`❌ Attempt ${attempt} failed:`, error);
-//             if (attempt < retries) {
-//                 console.log(`🔄 Retrying in ${delay / 1000} seconds...`);
-//                 await new Promise(resolve => setTimeout(resolve, delay));
-//             } else {
-//                 console.error("❌ Could not connect to the database after multiple attempts.");
-//                 process.exit(1);
-//             }
-//         }
-//     }
-// };
-
-
 app.use(cors()); // This middleware must be before app.use(bodyParser.json()) and app.use('/api', routes) middlewares
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);
 
-
-//connectWithRetry();
 
 
 

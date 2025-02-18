@@ -1,4 +1,4 @@
-import { sequelize } from "./sequelizeConfig.js";
+import  sequelize  from "./sequelizeConfig.js";
 
 const connectToDatabase = async () => {
   const databaseConnection = sequelize

@@ -1,7 +1,12 @@
-//require('dotenv').config(); // Load .env file
 import dotenv from 'dotenv';
-import pg from "pg";
+import pg from 'pg';
+import pkg from 'pg-connection-string';
+const { parse } = pkg;
+
+
 dotenv.config();
+
+const config = process.env.DATABASE_URL ? parse(process.env.DATABASE_URL) : {};
 
 export default {
   development: {
@@ -9,7 +14,7 @@ export default {
     password: "furebo123",
     database: "lmis",
     host: "localhost",
-    dialect: "postgres"
+    dialect: "postgres",
   },
   test: {
     url: process.env.DATABASE_URL,
@@ -22,13 +27,17 @@ export default {
     },
   },
   production: {
-    url: process.env.DATABASE_URL,
+    username: config.user,
+    password: config.password,
+    database: config.database,
+    host: config.host,
+    port: config.port || 5432, // Default Postgres port
     dialect: 'postgres',
     dialectModule: pg,
     dialectOptions: {
       ssl: {
-        // require: true,
-        // rejectUnauthorized: false,
+        require: true,
+        rejectUnauthorized: false,
       },
     },
   },

@@ -1,21 +1,16 @@
-import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
-import pg from "pg";
+import { Sequelize } from 'sequelize';
+import config from './src/database/config/config.js';
 
-dotenv.config();
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env];
 
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("Database URL must be provided");
-}
-export const sequelize = new Sequelize(databaseUrl, {
-  dialect: "postgres",
-  dialectModule: pg,
-  dialectOptions: {
-    // ssl: {
-    //   require: true,
-    //   rejectUnauthorized: false,
-    // },
-  },
+const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+  host: dbConfig.host,
+  port: dbConfig.port,
+  dialect: dbConfig.dialect,
+  dialectOptions: dbConfig.dialectOptions,
+  logging: false, // Disable SQL query logs in production
 });
+
+export default sequelize;
+

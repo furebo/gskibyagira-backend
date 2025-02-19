@@ -9,14 +9,14 @@ import cors from 'cors';
 import connectToDatabase from './databaseConfig.js';
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 // Check current environment
 const isProduction = process.env.NODE_ENV === 'production';
 console.log("let check the environment is isProduction: ",isProduction)
 
-console.log("Current Environment:", process.env.NODE_ENV);
-console.log("Database URL:", process.env.DATABASE_URL);
+console.log("Current Environment:", process.env.NODE_ENV || 'development');
+console.log("Remote Database URL:", process.env.DATABASE_URL);
 
 let sequelize;
 if (isProduction) {

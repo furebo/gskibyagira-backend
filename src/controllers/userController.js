@@ -173,11 +173,11 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     //Check if the email is verified in the database.
-    if(user.dataValues.isVerified == null){
-      console.log("The Email is not verified.")
+   // if(user.dataValues.isVerified == null){
+      //console.log("The Email is not verified.")
       //return res.status(404).json({message:"Email is not verified. Please verify your Email to login."})
-    return;
-    }
+    //return;
+    //}
 
     console.log(user);
     // Validate the password using bcrypt

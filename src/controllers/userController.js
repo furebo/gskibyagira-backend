@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
     });
   } 
   const hashedpassword = await bcrypt.hash(password, 12);
-  user.findOne({
+  db.user.findOne({
     where: {
       email,
     },
@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
       });
     }else{
       
-    user.create({
+    db.user.create({
       firstName,
       lastName,
       email,
@@ -70,7 +70,7 @@ const registerUser = async (req, res) => {
 //the function to get all users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await user.findAll({
+    const users = await db.user.findAll({
       attributes: ['id', 'firstName', 'lastName', 'email', 'role'], // Include the fields you want to retrieve
     });
     console.log('All users are :',users)
@@ -114,7 +114,7 @@ const editUser = async (req, res) => {
 
   try {
     // Find the user by ID
-    const user = await user.findOne({ where: { id } });
+    const user = await db.user.findOne({ where: { id } });
 
     if (!user) {
       return res.status(404).json({
@@ -145,13 +145,13 @@ const deleteUser = async (req, res) => {
   try {
       const { id } = req.params; // Assuming the ID is passed as a route parameter
 
-      const user = await user.findOne({ where: { id } });
+      const user = await db.user.findOne({ where: { id } });
 
       if (!user) {
           return res.status(404).json({ message: "User record not found." });
       }
 
-      await user.destroy({
+      await db.user.destroy({
           where: { id }
       });
 
@@ -167,7 +167,7 @@ const loginUser = async (req, res) => {
 
   try {
     // Check if the user exists in the database
-    const user = await user.findOne({ where: { email } });
+    const user = await db.user.findOne({ where: { email } });
     //console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

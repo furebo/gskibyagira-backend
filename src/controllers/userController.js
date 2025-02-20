@@ -168,7 +168,7 @@ const loginUser = async (req, res) => {
   try {
     // Check if the user exists in the database
     const user = await user.findOne({ where: { email } });
-    console.log(user.dataValues.isVerified);
+    //console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -179,7 +179,7 @@ const loginUser = async (req, res) => {
     //return;
     //}
 
-    console.log(user);
+    //console.log(user);
     // Validate the password using bcrypt
     const isMatch = await bcrypt.compare(password, user.hashedpassword);
     if (!isMatch) {

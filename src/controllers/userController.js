@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import crypto from "crypto";
 //const jwt = require('jsonwebtoken');
 import jwt from 'jsonwebtoken';
 //import generatePassword from '../helpers/generatePassword';
@@ -14,10 +15,6 @@ dotenv.config();
 // the function to register a user
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password,role } = req.body;
-  //const userpassword = generatePassword();
-  //console.log("The user password frpm generatePassword() is ", userpassword)
-  //const frontendUrl = process.env.FRONTEND_URL;
- 
   if (firstName === '' || lastName === '' || email === '' ||password === '') {
     return res.status(500).json({
       message:"All fields are required.",
@@ -66,6 +63,71 @@ const registerUser = async (req, res) => {
     }
   });
 };
+
+//let send a request to reset the password
+export const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await db.user.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = Date.now() + 3600000; // 1 hour expiration
+
+    await user.update({ resetToken, tokenExpires });
+
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+
+    // Email setup
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "furebodidace582@gmail.com",
+        pass: "bamurangekayitani123",
+      },
+    });
+
+    await transporter.sendMail({
+      to: email,
+      subject: "Password Reset Request",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    });
+
+    res.status(200).json({ message: "Password reset email sent." });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+//User reset password
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const user = await db.user.findOne({ where: { resetToken: token, tokenExpires: { [db.Sequelize.Op.gt]: Date.now() } } });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    // Hash the new password
+    user.hashedpassword = await bcrypt.hash(newPassword, 12);
+    user.resetToken = null; // Clear the token
+    user.tokenExpires = null;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 //the function to get all users
 const getAllUsers = async (req, res) => {
@@ -167,7 +229,8 @@ const loginUser = async (req, res) => {
 
   try {
     // Check if the user exists in the database
-    const user = await db.user.findOne({ where: { email } });
+    console.log(email);
+    const user = await db.user.findOne({ where: {email} });
     //console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -233,4 +296,4 @@ function Sum(...numbers){
 
 console.log(Sum(1,2,3,4))
 
-export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser}
+export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser,resetPassword}

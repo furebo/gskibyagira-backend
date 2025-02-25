@@ -22,6 +22,8 @@ export default (sequelize) => {
     email: DataTypes.STRING,
     hashedpassword: DataTypes.STRING,
     role: DataTypes.STRING,
+    resetToken: DataTypes.STRING,
+    tokenExpires: DataTypes.DATE,
     isVerified:DataTypes.BOOLEAN,
   }, {
     sequelize,

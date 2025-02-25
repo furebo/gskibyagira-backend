@@ -19,7 +19,7 @@ console.log("Current Environment:", process.env.NODE_ENV || 'development');
 console.log("Remote Database URL:", process.env.DATABASE_URL);
 
 let sequelize;
-if (isProduction) {
+if (isProduction || !isProduction) {
     connectToDatabase()
     .then(() => {
       console.log('Connected to the database');

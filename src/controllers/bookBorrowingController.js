@@ -9,9 +9,9 @@ dotenv.config();
 const BorrowBook =  async (req, res) => {
   
   try {
-    const { Book_Type, Book_Level, Book_Number, Student_Name, Student_Class, Borrowing_Date } = req.body;
+    const { Book_Type, Book_Level, Book_Number, Student_Name, Student_Class, Borrowing_Date, Return_Date } = req.body;
 
-    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class ) {
+    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class || !Return_Date) {
       return res.status(400).json({
         message: "All fields are required.",
       });
@@ -23,7 +23,8 @@ const BorrowBook =  async (req, res) => {
       Book_Number,
       Student_Name,
       Student_Class,
-      Borrowing_Date
+      Borrowing_Date,
+      Return_Date
     });
     
     return res.status(201).json({

@@ -1,14 +1,12 @@
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import crypto from "crypto";
-//const jwt = require('jsonwebtoken');
 import jwt from 'jsonwebtoken';
-//import generatePassword from '../helpers/generatePassword';
-//import { sendEmail } from '../helpers/sendEmail';
 import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
+import { PasswordResetEmail } from '../Middlewares/SendPasswordResetEmail.js';
 import db from '../database/models/index.js';
 import { template } from '../utils/emailVerificationtemplate.js';
-const { user } = db;  // Extract the User model
+//const { user } = db;  // Extract the User model
 
 
 dotenv.config();
@@ -24,7 +22,7 @@ const registerUser = async (req, res) => {
       message:'email_invalid',
     });
   } 
-  const hashedpassword = await bcrypt.hash(password, 12);
+  const hashedPassword = await bcrypt.hash(password, 12);
   db.user.findOne({
     where: {
       email,
@@ -40,15 +38,13 @@ const registerUser = async (req, res) => {
       firstName,
       lastName,
       email,
-      hashedpassword,
+      hashedPassword,
       role
     })
       .then((user1) => {
         const token = jwt.sign(JSON.parse(JSON.stringify(user1)), process.env.JWT_SECRET, { expiresIn: '1h' });
         jwt.verify(token, process.env.JWT_SECRET, () => {});
-        
-        //console.log('Calling sendVerificationEmail...');
-        sendVerificationEmail(user1.firstName, user1.email, token);
+        sendVerificationEmail(user1.firstName, user1.email, token,"Verify your Email");
         res.status(201).json({
           message:'You are registered, Please check your email to verify your account',
           user_details: user1,
@@ -65,7 +61,7 @@ const registerUser = async (req, res) => {
 };
 
 //let send a request to reset the password
-export const requestPasswordReset = async (req, res) => {
+ const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
   try {
@@ -79,22 +75,7 @@ export const requestPasswordReset = async (req, res) => {
 
     await user.update({ resetToken, tokenExpires });
 
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
-
-    // Email setup
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: "furebodidace582@gmail.com",
-        pass: "bamurangekayitani123",
-      },
-    });
-
-    await transporter.sendMail({
-      to: email,
-      subject: "Password Reset Request",
-      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
-    });
+    PasswordResetEmail(user.firstName, user.email, resetToken,"Reset Password");
 
     res.status(200).json({ message: "Password reset email sent." });
   } catch (error) {
@@ -114,14 +95,19 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
     }
+      console.log("we got the user ",user);
 
-    // Hash the new password
-    user.hashedpassword = await bcrypt.hash(newPassword, 12);
-    user.resetToken = null; // Clear the token
-    user.tokenExpires = null;
-    await user.save();
+  // Hash the new password and update user details
+  await user.update(
+    {
+      hashedPassword: await bcrypt.hash(newPassword, 12), // Use the correct field name
+      resetToken: null, 
+      tokenExpires: null
+    }, 
+    { individualHooks: true } // Ensure hooks (if any) run
+  );
 
-    res.status(200).json({ message: "Password reset successful" });
+  res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -228,23 +214,11 @@ const loginUser = async (req, res) => {
   const { email, password} = req.body;
 
   try {
-    // Check if the user exists in the database
-    console.log(email);
     const user = await db.user.findOne({ where: {email} });
-    //console.log(user.dataValues.isVerified);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    //Check if the email is verified in the database.
-   // if(user.dataValues.isVerified == null){
-      //console.log("The Email is not verified.")
-      //return res.status(404).json({message:"Email is not verified. Please verify your Email to login."})
-    //return;
-    //}
-
-    //console.log(user);
-    // Validate the password using bcrypt
-    const isMatch = await bcrypt.compare(password, user.hashedpassword);
+      const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -258,9 +232,7 @@ const loginUser = async (req, res) => {
 
     // Return the token to the client
     res.status(200).json({ message: 'Login successful', token });
-
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -283,17 +255,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-//let try to test the functionalities of ES6 rest operator
-
-function Sum(...numbers){
-  let total=0;
-  for(const num of numbers){
-   
-    total += num;
-  }
-  return total
-}
-
-console.log(Sum(1,2,3,4))
-
-export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser,resetPassword}
+export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser,requestPasswordReset,resetPassword}

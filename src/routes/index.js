@@ -6,6 +6,8 @@ import staffRoutes from './StaffRoutes.js';
 import createBookRoutes from './BookRoutes.js';
 import messageRoutes from './MessageRoutes.js';
 import userLoginRoutes from './UserLoginRoutes.js'
+import requestPasswordResetRoute from './RequestPasswordReset.js';
+import resetPasswordRoute from './ResetPasswordRoute.js'
 
 const router = express.Router();
 
@@ -17,5 +19,7 @@ router.use('/staffs',staffRoutes);
 router.use('/books',createBookRoutes);
 router.use('/messages',messageRoutes);
 router.use('/',userLoginRoutes);
+router.use('/reset',requestPasswordResetRoute);
+router.use('/',resetPasswordRoute);
 
 export default router;

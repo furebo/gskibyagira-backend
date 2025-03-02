@@ -22,7 +22,8 @@ export default (sequelize) => {
     Book_Number: DataTypes.STRING,
     Student_Name: DataTypes.STRING,
     Student_Class: DataTypes.STRING,
-    Borrowing_Date: DataTypes.DATE
+    Borrowing_Date: DataTypes.DATE,
+    Return_Date: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'bookborrowing',

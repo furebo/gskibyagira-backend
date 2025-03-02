@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 //const { google } = require('googleapis');
 import { google } from 'googleapis';
-import { template } from '../utils/emailVerificationtemplate.js';
 
 dotenv.config();
 
@@ -16,7 +15,8 @@ dotenv.config();
 
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 //oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-export const sendVerificationEmail = async (firstname, email, token,emailsubject) => {
+export const PasswordResetEmail = async (firstname, email, token,emailsubject) => {
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
   try {
   oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 // Generate access token
@@ -39,7 +39,7 @@ const mailOptions = {
   from: `GS KIBYAGIRA_LMIS <${process.env.EMAIL_USER}`, // Sender email address
   to: email,       // Receiver email address
   subject: emailsubject,
-  html: template(firstname,token),
+  html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
 };
 
 transporter.sendMail(mailOptions, (err, info) => {

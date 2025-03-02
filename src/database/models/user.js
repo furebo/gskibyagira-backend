@@ -20,8 +20,10 @@ export default (sequelize) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
-    hashedpassword: DataTypes.STRING,
+    hashedPassword: DataTypes.STRING,
     role: DataTypes.STRING,
+    resetToken: DataTypes.STRING,
+    tokenExpires: DataTypes.DATE,
     isVerified:DataTypes.BOOLEAN,
   }, {
     sequelize,

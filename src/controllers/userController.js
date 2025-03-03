@@ -249,7 +249,7 @@ const loginUser = async (req, res) => {
       res.status(400).send(template(user.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
     }
     await model.User.update({ isVerified: true }, { where: { email: user.email } });
-    //res.status(200).redirect('http://localhost:3000/login');
+    res.status(200).redirect('http://localhost:3000/login');
   } catch (error) {
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));
   }

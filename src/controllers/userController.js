@@ -245,12 +245,13 @@ const loginUser = async (req, res) => {
     const User = jwt.decode(req.params.token);
     const userEmail = await db.user.findOne({ where: { email: User.email } });
 
-    if (userEmail.isVerified === true) {
+    if (userEmail.isVerified === "Yes") {
       res.status(400).send(template(User.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
     }
-    await db.user.update({ isVerified: true }, { where: { email: User.email } });
+    await db.user.update({ isVerified: "Yes" }, { where: { email: User.email } });
     res.status(200).redirect('http://localhost:3000/login');
   } catch (error) {
+    console.log("This is the error found: ",error)
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));
   }
 };

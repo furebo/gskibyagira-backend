@@ -6,7 +6,6 @@ import { sendVerificationEmail } from '../Middlewares/SendEmail.js';
 import { PasswordResetEmail } from '../Middlewares/SendPasswordResetEmail.js';
 import db from '../database/models/index.js';
 import { template } from '../utils/emailVerificationtemplate.js';
-//const { user } = db;  // Extract the User model
 
 
 dotenv.config();
@@ -242,13 +241,13 @@ const loginUser = async (req, res) => {
   try {
     jwt.verify(req.params.token, process.env.JWT_KEY);
 
-    const user = jwt.decode(req.params.token);
-    const userEmail = await model.User.findOne({ where: { email: user.email } });
+    const User = jwt.decode(req.params.token);
+    const userEmail = await db.user.findOne({ where: { email: User.email } });
 
     if (userEmail.isVerified === true) {
-      res.status(400).send(template(user.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
+      res.status(400).send(template(User.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
     }
-    await model.User.update({ isVerified: true }, { where: { email: user.email } });
+    await db.user.update({ isVerified: true }, { where: { email: User.email } });
     res.status(200).redirect('http://localhost:3000/login');
   } catch (error) {
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));

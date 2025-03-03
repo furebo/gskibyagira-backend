@@ -240,6 +240,7 @@ const loginUser = async (req, res) => {
  const verifyUser = async (req, res) => {
   try {
     jwt.verify(req.params.token, process.env.JWT_KEY);
+    console.log("Is is the token from user email frontend :",req.params.token)
 
     const User = jwt.decode(req.params.token);
     const userEmail = await db.user.findOne({ where: { email: User.email } });

@@ -249,7 +249,7 @@ const loginUser = async (req, res) => {
       res.status(400).send(template(User.firstName, null, 'This email is already verified, please click the link bellow to go back to home page and then login to BMIS', 'Back to Homepage'));
     }
     await db.user.update({ isVerified: "Yes" }, { where: { email: User.email } });
-    res.status(200).redirect('https://gskibyagiraburuhukiro.netlify.app');
+    res.status(200).send(template(User.firstName, null, 'Email verified successfully, please click the link bellow to go back to home page and then login to BMIS', 'Back to Homepage'));
   } catch (error) {
     console.log("This is the error found: ",error)
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));

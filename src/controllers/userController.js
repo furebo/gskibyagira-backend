@@ -246,7 +246,7 @@ const loginUser = async (req, res) => {
     const userEmail = await db.user.findOne({ where: { email: User.email } });
 
     if (userEmail.isVerified === "Yes") {
-      res.status(400).send(template(User.firstname, null, 'This email is already verified, please click here to login', 'Go to Login'));
+      res.status(400).send(template(User.firstName, null, 'This email is already verified, please click here to login', 'Go to Login'));
     }
     await db.user.update({ isVerified: "Yes" }, { where: { email: User.email } });
     res.status(200).redirect('https://gskibyagiraburuhukiro.netlify.app/login');

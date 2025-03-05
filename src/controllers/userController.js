@@ -246,10 +246,10 @@ const loginUser = async (req, res) => {
     const userEmail = await db.user.findOne({ where: { email: User.email } });
 
     if (userEmail.isVerified === "Yes") {
-      res.status(400).send(template(User.firstName, null, 'This email is already verified, please click here to login', 'Go to Login'));
+      res.status(400).send(template(User.firstName, null, 'This email is already verified, please click the link bellow to go back to home page and then login to BMIS', 'Back to Homepage'));
     }
     await db.user.update({ isVerified: "Yes" }, { where: { email: User.email } });
-    res.status(200).redirect('https://gskibyagiraburuhukiro.netlify.app/login');
+    res.status(200).redirect('https://gskibyagiraburuhukiro.netlify.app');
   } catch (error) {
     console.log("This is the error found: ",error)
     res.status(400).send(template('User', null, 'Invalid Token, Please signup again', 'Go to Signup'));

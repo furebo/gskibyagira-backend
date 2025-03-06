@@ -16,7 +16,7 @@ dotenv.config();
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 //oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 export const PasswordResetEmail = async (firstname, email, token,emailsubject) => {
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
+    const resetLink = `https://gskibyagiraburuhukiro.netlify.app/reset-password/${token}`;
   try {
   oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 // Generate access token

@@ -1,29 +1,61 @@
 'use strict';
-import {Model,DataTypes} from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
+
 export default (sequelize) => {
-  class message extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class Message extends Model {
     static associate(models) {
-      // define association here
+      // Define associations here if needed
     }
   }
-  message.init({
-    id: { 
-      type:DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+
+  Message.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false, // Required field
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false, // Required field
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false, // Required field
+        validate: {
+          isEmail: true, // Ensures it's a valid email
+        },
+      },
+      telephone: {
+        type: DataTypes.STRING,
+        allowNull: false, // Required field
+      },
+      message: {
+        type: DataTypes.TEXT, // Use TEXT instead of STRING for longer messages
+        allowNull: false, // Required field
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Auto-generate timestamps
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Auto-update timestamps
+      },
     },
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    telephone: DataTypes.STRING,
-    message: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'message',
-  });
-  return message;
+    {
+      sequelize,
+      modelName: 'Message',
+      tableName: 'messages', // Explicit table name to match convention
+      timestamps: true, // Enables automatic timestamps
+    }
+  );
+
+  return Message;
 };

@@ -1,19 +1,22 @@
 import dotenv from 'dotenv';
-import model from '../database/models/index.js';
+import db from '../database/models/index.js';
 
-const Message = model.message;
+//const Message = db.message;
 
 dotenv.config();
 
 const createMessage = async (req, res) => {
-  const { name, email, telephone, message } = req.body;
-  if (name === '' || email === ''||telephone =='' || message === '') {
-    return res.status(500).json({
-      message:"All fields are required.",
-    });
-  }  
-      Message.create({
-      name,
+  console.log(req.body); // Log request body to see what is being sent
+
+  const { firstName,lastName, email, telephone, message } = req.body;
+
+  if (!firstName || !lastName || !email || !telephone || !message) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+   
+      db.Message.create({
+      firstName,
+      lastName,
       email,
       telephone,
       message
@@ -36,8 +39,9 @@ const createMessage = async (req, res) => {
   //the function to get all messages
 const getAllMessages = async (req, res) => {
     try {
-      const messages = await Message.findAll({
-        attributes: ['id', 'name', 'email', 'telephone', 'message'], // Include the fields you want to retrieve
+      const messages = await db.Message.findAll({
+        attributes: ['id', 'firstName', 'lastName','email', 'telephone', 'message','createdAt'], // Include the fields you want to retrieve
+        order: [['createdAt', 'DESC']], // Sort by latest messages first
       });
   
       if (messages.length === 0) {

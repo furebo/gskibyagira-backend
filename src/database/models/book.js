@@ -2,7 +2,7 @@
 import { Model, DataTypes } from 'sequelize';
 
 export default (sequelize) => {
-  class Book extends Model {
+  class book extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ export default (sequelize) => {
     }
   }
 
-  Book.init({
+  book.init({
     id: { 
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -26,8 +26,8 @@ export default (sequelize) => {
     deliveryDate: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'Book', // Updated model name to PascalCase
+    modelName: 'book', // Updated model name to PascalCase
   });
 
-  return Book;
+  return book;
 };

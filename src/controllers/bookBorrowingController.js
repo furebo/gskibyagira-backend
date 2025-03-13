@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import model from '../database/models/index.js';
+import db from '../database/models/index.js';
 import Sequelize from 'sequelize';
 
-const BookBorrowing = model.bookborrowing;
+//const BookBorrowing = model.bookborrowing;
 
 dotenv.config();
 
@@ -11,13 +11,13 @@ const BorrowBook =  async (req, res) => {
   try {
     const { Book_Type, Book_Level, Book_Number, Student_Name, Student_Class, Borrowing_Date, Return_Date } = req.body;
 
-    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class || !Return_Date) {
+    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class) {
       return res.status(400).json({
         message: "All fields are required.",
       });
     }
     
-    const data =  await BookBorrowing.create({
+    const data =  await db.bookborrowing.create({
       Book_Type,
       Book_Level,
       Book_Number,

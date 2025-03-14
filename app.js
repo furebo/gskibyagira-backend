@@ -19,7 +19,7 @@ console.log("Current Environment:", process.env.NODE_ENV || 'development');
 console.log("Remote Database URL:", process.env.DATABASE_URL);
 
 let sequelize;
-if (isProduction) {
+if (isProduction || !isProduction) {
     connectToDatabase()
     .then(() => {
       console.log('Connected to the database');
@@ -33,38 +33,8 @@ if (isProduction) {
     }
     )
 }
-const allowedOrigins = [
-  'http://localhost:3000',  // Allow frontend during development
-  'https://https://gskibyagiraburuhukiro.netlify.app' // Allow production frontend
-];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow request
-    } else {
-      callback(new Error('Not allowed by CORS')); // Block request
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  
-  if (req.method === "OPTIONS") {
-    return res.status(200).end(); // Handle CORS preflight request
-  }
-
-  next();
-});
-
-app.options('*', cors(corsOptions)); // Handle preflight requests
-app.use(cors(corsOptions)); // Keep your original CORS middleware
+app.use(cors()); // Keep your original CORS middleware
 // This middleware must be before app.use(bodyParser.json()) and app.use('/api', routes) middlewares
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));

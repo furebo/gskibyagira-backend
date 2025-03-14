@@ -10,35 +10,32 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4
       },
-      booktype: {
+      Book_Type: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      booklevel: {
+      Book_Level: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      booknumber: {
+      Book_Number: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      studentname: {
+      Student_Name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      studentname: {
+    
+      Student_Class: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      studentclass: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      borrowingdate: {
+      Borrowing_Date: {
         type: Sequelize.DATE,
         allowNull: false
       },
-      returndate: {
+      Return_Date: {
         type: Sequelize.DATE,
         allowNull: true
       },

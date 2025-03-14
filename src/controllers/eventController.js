@@ -1,7 +1,7 @@
-import models from '../database/models/index.js';
+import db from '../database/models/index.js';
 import upload from '../utils/multer.js'; // Import the multer setup with Cloudinary
 
-const event = models.event;
+//const event = models.event;
 
 //controller to create an event
 const CreateEvent = async (req, res) => {
@@ -21,7 +21,7 @@ const CreateEvent = async (req, res) => {
 
     if (heading && description) {
       try {
-        const data = await event.create({
+        const data = await db.event.create({
           heading,
           description,
           image_url,
@@ -66,13 +66,13 @@ const updateEvent = async (req, res) => {
     if (heading && description) {
       try {
         // Check if the event exists
-        const eventToEdit = await event.findOne({ where: { id } });
+        const eventToEdit = await db.event.findOne({ where: { id } });
         if (!eventToEdit) {
           return res.status(404).json({ message: "Event record not found." });
         }
 
         // Update the event
-        const updatedRecord = await event.update(
+        const updatedRecord = await db.event.update(
           {
             heading,
             description,
@@ -108,7 +108,7 @@ const updateEvent = async (req, res) => {
 
 const allEvents = async (req,res)=>{
   try {
-    const response = await event.findAll();
+    const response = await db.event.findAll();
     if(response){
       return res.status(200).json({
         message:"All events are found well",
@@ -126,7 +126,7 @@ const allEvents = async (req,res)=>{
 
 const allActiveEventsForSliderData = async (req,res)=>{
   try {
-    const response = await event.findAll(
+    const response = await db.event.findAll(
       {
         where: {
           is_active: 'Yes'  // Filter for active events
@@ -152,14 +152,14 @@ const deleteEvent = async (req, res) => {
     const { id } = req.params; // Get the event ID from the request parameters
 
     // Find the event by ID
-    const eventToDelete = await event.findOne({ where: { id } });
+    const eventToDelete = await db.event.findOne({ where: { id } });
 
     if (!eventToDelete) {
       return res.status(404).json({ message: "Event record not found." });
     }
 
     // Delete the event
-    await event.destroy({ where: { id } });
+    await db.event.destroy({ where: { id } });
 
     return res.status(200).json({
       message: "Event record deleted successfully."

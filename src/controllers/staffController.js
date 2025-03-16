@@ -1,7 +1,7 @@
-import models from '../database/models/index.js';
+import db from '../database/models/index.js';
 import upload from '../utils/multer.js'; // Import the multer setup with Cloudinary
 
-const staff = models.staff;
+//const staff = models.staff;
 //controller to create an event
 const CreateStaff = async (req, res) => {
     console.log("I am hitting the endpoint")
@@ -20,7 +20,7 @@ const CreateStaff = async (req, res) => {
   
       if (firstName && lastName) {
         try {
-          const data = await staff.create({
+          const data = await db.staff.create({
             firstName,
             lastName,
             role,
@@ -49,7 +49,7 @@ const CreateStaff = async (req, res) => {
 
 const allStaff = async (req,res)=>{
     try {
-      const response = await staff.findAll();
+      const response = await db.staff.findAll();
       if(response){
         return res.status(200).json({
           message:"All Staff are found well",
@@ -85,13 +85,13 @@ const updateStaff = async (req, res) => {
       if (firstName && lastName) {
         try {
           // Check if the event exists
-          const staffToEdit = await staff.findOne({ where: { id } });
+          const staffToEdit = await db.staff.findOne({ where: { id } });
           if (!staffToEdit) {
             return res.status(404).json({ message: "staff record not found." });
           }
   
           // Update the event
-          const updatedRecord = await staff.update(
+          const updatedRecord = await db.staff.update(
             {
               firstName,
               lastName,
@@ -130,7 +130,7 @@ const deleteStaff = async (req, res) => {
       const { id } = req.params; // Get the staff ID from the request parameters
   
       // Find the staff by ID
-      const staffToDelete = await staff.findOne({ where: { id } });
+      const staffToDelete = await db.staff.findOne({ where: { id } });
   
       if (!staffToDelete) {
         return res.status(404).json({ message: "Staff record not found." });

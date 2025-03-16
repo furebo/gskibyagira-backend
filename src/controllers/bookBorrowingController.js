@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import model from '../database/models/index.js';
+import db from '../database/models/index.js';
 import Sequelize from 'sequelize';
 
-const BookBorrowing = model.bookborrowing;
+//const BookBorrowing = model.bookborrowing;
 
 dotenv.config();
 
@@ -11,13 +11,13 @@ const BorrowBook =  async (req, res) => {
   try {
     const { Book_Type, Book_Level, Book_Number, Student_Name, Student_Class, Borrowing_Date, Return_Date } = req.body;
 
-    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class || !Return_Date) {
+    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class) {
       return res.status(400).json({
         message: "All fields are required.",
       });
     }
     
-    const data =  await BookBorrowing.create({
+    const data =  await db.bookborrowing.create({
       Book_Type,
       Book_Level,
       Book_Number,
@@ -41,7 +41,7 @@ const BorrowBook =  async (req, res) => {
 
 const allBorrowedBooks = async (req,res)=>{
     try {
-      const response = await BookBorrowing.findAll();
+      const response = await db.bookborrowing.findAll();
       if(response){
         return res.status(200).json({
           message:"Borrowed books found well",
@@ -59,7 +59,7 @@ const allBorrowedBooks = async (req,res)=>{
 const allBorrowedBooksByType = async (req, res) => {
   try {
       // Query to get count of borrowed books grouped by bookType
-      const response = await BookBorrowing.findAll({
+      const response = await db.bookborrowing.findAll({
           attributes: ['Book_Type', [Sequelize.fn('COUNT', Sequelize.col('Book_Type')), 'count']],
           group: ['Book_Type'],  // Group by bookType
       });
@@ -82,13 +82,13 @@ const deleteBorrowedBook = async (req, res) => {
     try {
         const { id } = req.params; // Assuming the ID is passed as a route parameter
 
-        const book = await BookBorrowing.findOne({ where: { id } });
+        const book = await db.bookborrowing.findOne({ where: { id } });
 
         if (!book) {
             return res.status(404).json({ message: "Book record not found." });
         }
 
-        await BookBorrowing.destroy({
+        await db.bookborrowing.destroy({
             where: { id }
         });
 
@@ -102,16 +102,14 @@ const updateBorrowedBook = async (req, res) => {
     try {
         const { id } = req.params; // Assuming the ID is passed as a route parameter
 
-        const book = await BookBorrowing.findOne({ where: { id } });
+        const book = await db.bookborrowing.findOne({ where: { id } });
         //console.log(book);
 
         if (!book) {
             return res.status(404).json({ message: "Book record not found." });
         }
         const updatedBookRecord = req.body
-        console.log("The request from body is this one :",updatedBookRecord)
-
-        const updatedrecord = await BookBorrowing.update(updatedBookRecord,{
+        const updatedrecord = await db.bookborrowing.update(updatedBookRecord,{
             where: { id }
         });
 

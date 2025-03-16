@@ -34,7 +34,8 @@ if (isProduction) {
     )
 }
 
-app.use(cors()); // This middleware must be before app.use(bodyParser.json()) and app.use('/api', routes) middlewares
+app.use(cors()); // Keep your original CORS middleware
+// This middleware must be before app.use(bodyParser.json()) and app.use('/api', routes) middlewares
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);

@@ -61,4 +61,62 @@ const getAllMessages = async (req, res) => {
       });
     }
   };
-export {createMessage,getAllMessages};
+
+  // Delete a message by ID
+const deleteMessage = async (req, res) => {
+  const { id } = req.params; // Get the ID from URL parameters
+
+  try {
+    const message = await db.Message.findByPk(id); // Find the message by primary key
+
+    if (!message) {
+      return res.status(404).json({
+        message: 'Message not found.',
+      });
+    }
+
+    await message.destroy(); // Delete the message
+
+    return res.status(200).json({
+      message: 'Message deleted successfully.',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to delete the message.',
+      error: error.message,
+    });
+  }
+};
+
+// Update a message by ID
+const editMessage = async (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, email, telephone, message } = req.body;
+
+  try {
+    const existingMessage = await db.Message.findByPk(id);
+
+    if (!existingMessage) {
+      return res.status(404).json({ message: 'Message not found.' });
+    }
+
+    await existingMessage.update({
+      firstName,
+      lastName,
+      email,
+      telephone,
+      message
+    });
+
+    return res.status(200).json({
+      message: 'Message updated successfully.',
+      data: existingMessage,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Failed to update the message.',
+      error: error.message,
+    });
+  }
+};
+export {createMessage,getAllMessages,deleteMessage,editMessage};

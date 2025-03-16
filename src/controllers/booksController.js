@@ -1,38 +1,37 @@
 import dotenv from 'dotenv';
-import model from '../database/models/index.js';
-
-const book = model.book;
+import db from '../database/models/index.js';
 
 dotenv.config();
 
 const createBook = async (req, res) => {
-  const { bookType, bookLevel, bookCode, bookAuthor, deliveryDate } = req.body;
-  if (bookType === '' || bookLevel === ''||bookCode=='' || bookAuthor === '' || deliveryDate === '') {
-    return res.status(500).json({
-      message:"All fields are required.",
-    });
-  }  
-      book.create({
+  try {
+    const { bookType, bookLevel, bookCode, bookAuthor, deliveryDate } = req.body;
+
+    if (!bookType || !bookLevel || !bookCode || !bookAuthor || !deliveryDate) {
+      return res.status(400).json({
+        message: "All fields are required.",
+      });
+    }
+
+    const data = await db.book.create({
       bookLevel,
       bookType,
       bookCode,
       bookAuthor,
       deliveryDate,
-    })
-      .then((data) => {
-        if (data) {
-             res.status(201).json({
-            message:'The book is successfully registered.',
-            data,
-          });
-        }
-      })
-      .catch((err) => {
-        res.status(400).json({
-          error: err.message,
-        });
-      });
-  };
+    });
+
+    return res.status(201).json({
+      message: "The book is successfully registered.",
+      data,
+    });
+
+  } catch (err) {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Ensure CORS headers in errors
+    return res.status(400).json({ error: err.message });
+  }
+};
+
 
   //the function to get all books
 const getAllBooks = async (req, res) => {

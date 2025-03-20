@@ -16,13 +16,13 @@ const CreateStaff = async (req, res) => {
         req.body.image_url = req.file.path; // The file.path will be the Cloudinary URL
       }
   
-      const { image_url, firstName, lastName,role,description } = req.body;
+      const { image_url, firstname, lastname,role,description } = req.body;
   
-      if (firstName && lastName) {
+      if (firstname && lastname) {
         try {
           const data = await db.staff.create({
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             role,
             description,
             image_url,
@@ -80,9 +80,9 @@ const updateStaff = async (req, res) => {
         req.body.image_url = req.file.path; // The file.path will be the Cloudinary URL
       }
   
-      const { image_url, firstName, lastName, role, description } = req.body;
+      const { image_url, firstname, lastname, role, description } = req.body;
   
-      if (firstName && lastName) {
+      if (firstname && lastname) {
         try {
           // Check if the event exists
           const staffToEdit = await db.staff.findOne({ where: { id } });
@@ -93,8 +93,8 @@ const updateStaff = async (req, res) => {
           // Update the event
           const updatedRecord = await db.staff.update(
             {
-              firstName,
-              lastName,
+              firstname,
+              lastname,
               role,
               description,
               image_url,         

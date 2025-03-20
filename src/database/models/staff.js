@@ -17,8 +17,8 @@ export default (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
+    firstname: DataTypes.STRING,
+    lastname: DataTypes.STRING,
     role: DataTypes.STRING,
     description: DataTypes.STRING,
     image_url: DataTypes.STRING

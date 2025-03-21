@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import  parse  from 'pg-connection-string';
 import express from 'express';
 import bodyParser from 'body-parser';
 import routes from './src/routes/index.js';
-import Sequelize from 'sequelize';
 import cors from 'cors';
 import connectToDatabase from './databaseConfig.js';
 
@@ -34,8 +32,13 @@ if (isProduction) {
     )
 }
 
-app.use(cors()); // Keep your original CORS middleware
-// This middleware must be before app.use(bodyParser.json()) and app.use('/api', routes) middlewares
+app.use(
+  cors({
+    origin: "https://gskibyagiraburuhukiro.netlify.app", // Allow only this frontend
+    methods: "GET,POST,PUT,DELETE", // Allow necessary HTTP methods
+    allowedHeaders: "Content-Type,Authorization", // Allow these headers
+  })
+);
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);

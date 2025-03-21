@@ -19,11 +19,11 @@ export default (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    bookType: DataTypes.STRING,
-    bookLevel: DataTypes.STRING,
-    bookCode: DataTypes.STRING,
-    bookAuthor: DataTypes.STRING,
-    deliveryDate: DataTypes.DATE
+    booktype: DataTypes.STRING,
+    booklevel: DataTypes.STRING,
+    bookcode: DataTypes.STRING,
+    bookauthor: DataTypes.STRING,
+    deliverydate: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'book', // Updated model name to PascalCase

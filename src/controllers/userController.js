@@ -30,13 +30,13 @@ const registerUser = async (req, res) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
-
+    
     // Create new user
     const newUser = await db.user.create({
       firstName,
       lastName,
       email,
-      password: hashedPassword, // Use password, not hashedPassword
+      hashedPassword, // Use password, not hashedPassword
       role
     });
 
@@ -57,8 +57,8 @@ const registerUser = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Error in registerUser:", err);
-    return res.status(500).json({ error: "Something went wrong!" });
+    console.error("Error in registerUser:", err); // Logs full error details
+    return res.status(500).json({ error: err.message || "Something went wrong!" });
   }
 };
 

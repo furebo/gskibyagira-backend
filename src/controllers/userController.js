@@ -11,53 +11,55 @@ import { template } from '../utils/emailVerificationtemplate.js';
 dotenv.config();
 // the function to register a user
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password,role } = req.body;
-  const emailExists=email;
-  if (firstName === '' || lastName === '' || email === '' ||password === '') {
-    return res.status(500).json({
-      message:"All fields are required.",
-    });
-  } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
-    return res.status(400).json({
-      message:'email_invalid',
-    });
-  } 
-  const hashedPassword = await bcrypt.hash(password, 12);
-  db.user.findOne({
-    where: {
-      email,
-    },
-  }).then(() => {
-    if (emailExists === email) {
-      return res.status(400).json({
-        message: 'The user with this email already exist!',
-      });
-    }else{
-      
-    db.user.create({
+  try {
+    const { firstName, lastName, email, password, role } = req.body;
+
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
+      return res.status(400).json({ message: "Invalid email format." });
+    }
+
+    // Check if user already exists
+    const existingUser = await db.user.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: "The user with this email already exists!" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create new user
+    const newUser = await db.user.create({
       firstName,
       lastName,
       email,
-      hashedPassword,
+      password: hashedPassword, // Use password, not hashedPassword
       role
-    })
-      .then((user1) => {
-        const token = jwt.sign(JSON.parse(JSON.stringify(user1)), process.env.JWT_SECRET, { expiresIn: '1h' });
-        jwt.verify(token, process.env.JWT_SECRET, () => {});
-        sendVerificationEmail(user1.firstName, user1.email, token,"Verify your Email");
-        res.status(201).json({
-          message:'You are registered, Please check your email to verify your account',
-          user_details: user1,
-          token: `JWT ${token}`
-        });
-      }).catch((err) => {
-        res.status(400).json({
-          error: err.message,
-        });
-      });
-     
-    }
-  });
+    });
+
+    //  Generate JWT Token
+    const token = jwt.sign(
+      { id: newUser.id, email: newUser.email, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    //  Send verification email
+    sendVerificationEmail(newUser.firstName, newUser.email, token, "Verify your Email");
+
+    return res.status(201).json({
+      message: "You are registered. Please check your email to verify your account.",
+      user_details: { id: newUser.id, email: newUser.email, role: newUser.role },
+      token
+    });
+
+  } catch (err) {
+    console.error("Error in registerUser:", err);
+    return res.status(500).json({ error: "Something went wrong!" });
+  }
 };
 
 //let send a request to reset the password

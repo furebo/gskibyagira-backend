@@ -12,6 +12,7 @@ dotenv.config();
 // the function to register a user
 const registerUser = async (req, res) => {
   const { firstName, lastName, email, password,role } = req.body;
+  const emailExists=email;
   if (firstName === '' || lastName === '' || email === '' ||password === '') {
     return res.status(500).json({
       message:"All fields are required.",
@@ -26,8 +27,8 @@ const registerUser = async (req, res) => {
     where: {
       email,
     },
-  }).then((emailExists) => {
-    if (emailExists) {
+  }).then(() => {
+    if (emailExists === email) {
       return res.status(400).json({
         message: 'The user with this email already exist!',
       });

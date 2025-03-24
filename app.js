@@ -31,7 +31,7 @@ if (isProduction) {
     }
     )
 }
-
+//https://gskibyagiraburuhukiro.netlify.app
 app.use(
   cors({
     origin: "https://gskibyagiraburuhukiro.netlify.app", // Allow only this frontend

@@ -1,4 +1,5 @@
 import express from 'express';
+import authRoutes from './AuthRoutes.js'
 import bookRoutes from './BorrowBookRoutes.js';
 import eventRoutes from './EventRoutes.js';
 import userRoutes from './userRoutes.js';
@@ -12,6 +13,7 @@ import resetPasswordRoute from './ResetPasswordRoute.js'
 const router = express.Router();
 
 // Use the bookRoutes for routes starting with /books
+router.use('/auth',authRoutes);
 router.use('/books', bookRoutes);
 router.use('/events',eventRoutes);
 router.use('/users',userRoutes);

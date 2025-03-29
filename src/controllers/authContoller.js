@@ -1,4 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/models/index.js'; // Ensure the file extension is included in ES modules
 import dotenv from 'dotenv';
@@ -33,16 +34,17 @@ export async function googleLogin(req, res) {
         // If user doesn't exist, create a new one
         if (!user) {
             user = await db.user.create({
-                name: googleUser.name,
+                firstName: googleUser.given_name,
+                lastName:googleUser.family_name,
                 email: googleUser.email,
-                password: "", // Since login is via Google, no password needed
+                hashedPassword:"passw",
                 provider: "google",
             });
         }
 
         // Generate JWT token for authentication
         const authToken = jwt.sign(
-            { id: user.id, email: user.email },
+            { id: user.id, email: user.email, role:"other" },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );

@@ -169,5 +169,4 @@ const deleteEvent = async (req, res) => {
   }
 };
 
-
 export {CreateEvent,allEvents,allActiveEventsForSliderData,updateEvent,deleteEvent};

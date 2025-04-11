@@ -31,6 +31,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      Status:{
+        type:Sequelize.STRING,
+        allowNull:true
+      },
       Borrowing_Date: {
         type: Sequelize.DATE,
         allowNull: false

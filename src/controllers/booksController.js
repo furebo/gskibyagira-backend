@@ -96,6 +96,7 @@ const editBook = async (req, res) => {
       });
     }
     const updatedBookRecord = req.body
+    console.log("This is the updated book: ", updatedBookRecord)
     const updatedrecord = await db.book.update(updatedBookRecord,{
         where: { id }
     });

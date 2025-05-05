@@ -89,7 +89,7 @@ export const template = (firstname, token, message = msg, action = act) => {
   
   <body>
       <section>
-          <h2>Confirm Your Email</h2>
+          <h2>Verify Your Email</h2>
           <div class="small_text">
               <p>
                   <strong>Hello, ${firstname}</strong>

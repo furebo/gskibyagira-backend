@@ -11,7 +11,7 @@ const BorrowBook =  async (req, res) => {
   try {
     const { Book_Type, Book_Level, Book_Number, Student_Name, Student_Class, Borrowing_Date, Return_Date } = req.body;
 
-    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class) {
+    if (!Book_Type || !Book_Level || !Book_Number || !Student_Name || !Student_Class || !Borrowing_Date || !Return_Date) {
       return res.status(400).json({
         message: "All fields are required.",
       });
@@ -24,7 +24,9 @@ const BorrowBook =  async (req, res) => {
       Student_Name,
       Student_Class,
       Borrowing_Date,
-      Return_Date
+      Return_Date,
+      Status:"Not Submitted"
+
     });
     
     return res.status(201).json({
@@ -42,7 +44,9 @@ const BorrowBook =  async (req, res) => {
 const allBorrowedBooks = async (req,res)=>{
     try {
       const response = await db.bookborrowing.findAll();
+
       if(response){
+        console.log(response)
         return res.status(200).json({
           message:"Borrowed books found well",
           data:response
@@ -109,6 +113,7 @@ const updateBorrowedBook = async (req, res) => {
             return res.status(404).json({ message: "Book record not found." });
         }
         const updatedBookRecord = req.body
+        console.log(updatedBookRecord);
         const updatedrecord = await db.bookborrowing.update(updatedBookRecord,{
             where: { id }
         });

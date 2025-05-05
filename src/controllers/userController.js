@@ -243,12 +243,12 @@ const loginUser = async (req, res) => {
  const verifyUser = async (req, res) => {
   try {
     jwt.verify(req.params.token, process.env.JWT_KEY);
-    console.log("Is is the token from user email frontend :",req.params.token)
+    console.log("This is the token from user email frontend :",req.params.token)
 
     const User = jwt.decode(req.params.token);
     const userEmail = await db.user.findOne({ where: { email: User.email } });
 
-    if (userEmail.isVerified === "Yes") {
+    if (userEmail.isVerified == "Yes") {
       res.status(400).send(template(User.firstName, null, 'This email is already verified, please click the link bellow to go back to home page and then login to BMIS', 'Back to Homepage'));
     }
     await db.user.update({ isVerified: "Yes" }, { where: { email: User.email } });

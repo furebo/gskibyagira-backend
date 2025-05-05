@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 //Apply CORS Middleware First
 app.use(
   cors({
-    origin: "https://gskibyagiraburuhukiro.netlify.app/", // Allow only this frontend
+    origin: "https://gskibyagiraburuhukiro.netlify.app", // Allow only this frontend
     methods: "GET,POST,PUT,DELETE", // Allow necessary HTTP methods
     allowedHeaders: "Content-Type,Authorization", // Allow these headers
   })
@@ -29,8 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);
 
 //Database Connection in Production
-const isProduction = process.env.NODE_ENV === 'production';
-if (isProduction) {
+const isProduction = process.env.NODE_ENV === 'development';
+if (isProduction || !isProduction) {
     connectToDatabase()
     .then(() => {
       console.log('Connected to the database');

@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
 
     //  Generate JWT Token
     const token = jwt.sign(
-      { id: newUser.id, email: newUser.email, role: newUser.role },
+      { id: newUser.id, email: newUser.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -220,7 +220,12 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-      const isMatch = await bcrypt.compare(password, user.hashedPassword);
+     // Check if email is verified
+     if (user.isVerified !== 'Yes') {
+      return res.status(403).json({ message: 'Please verify your email before logging in.' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -259,4 +264,28 @@ const loginUser = async (req, res) => {
   }
 };
 
-export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser,requestPasswordReset,resetPassword}
+//function to resend verification email
+const resendVerification = async (req,res) => {
+  const { email } = req.body;
+
+  const user = await db.user.findOne({ where: { email } });
+  if (!user) {
+    return res.status(404).json({ message: 'No user found with this email.' });
+  }
+
+  if (user.isVerified === 'Yes') {
+    return res.status(400).json({ message: 'This account is already verified.' });
+  }
+  
+  //  Generate JWT Token
+  const verificationToken = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+ sendVerificationEmail(user.firstName, user.email, verificationToken, "Verify your Email");
+
+  res.json({ message: 'Verification email has been resent. Please check your inbox.' });
+}
+
+export {registerUser,getAllUsers,editUser,deleteUser,loginUser,verifyUser,requestPasswordReset,resetPassword,resendVerification}

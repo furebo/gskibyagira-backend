@@ -33,6 +33,14 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
+      likes: {
+        type: Sequelize.INTEGER,
+        allowNull:true
+      },
+      dislikes: {
+        type: Sequelize.INTEGER,
+        allowNull:true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -18,6 +18,7 @@ const CreateEvent = async (req, res) => {
     }
 
     const { image_url, heading, description,is_active } = req.body;
+    console.log(image_url);
 
     if (heading && description) {
       try {
@@ -62,7 +63,7 @@ const updateEvent = async (req, res) => {
     }
 
     const { image_url, heading, description, is_active } = req.body;
-
+    
     if (heading && description) {
       try {
         // Check if the event exists

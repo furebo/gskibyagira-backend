@@ -119,4 +119,30 @@ const editMessage = async (req, res) => {
     });
   }
 };
-export {createMessage,getAllMessages,deleteMessage,editMessage};
+//Like a message controller
+const like_message = async (req, res) => {
+  try {
+    const message = await db.message.findByPk(req.params.id);
+    if (!message) return res.status(404).json({ error: 'Message not found' });
+
+    message.likes += 1;
+    await message.save();
+    res.json({ message: 'Liked!', data: message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+//dislike a method
+const dislike_message = async (req, res) => {
+  try {
+    const message = await db.message.findByPk(req.params.id);
+    if (!message) return res.status(404).json({ error: 'Message not found' });
+
+    message.dislikes += 1;
+    await message.save();
+    res.json({ message: 'Disliked!', data: message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+export {createMessage,getAllMessages,deleteMessage,editMessage, like_message, dislike_message};

@@ -6,7 +6,7 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 // Configure Cloudinary with your credentials
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_NAME,  // Set these in your environment variables
+  cloud_name: process.env.CLOUDINARY_NAME,  
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });

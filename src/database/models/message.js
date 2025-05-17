@@ -38,6 +38,14 @@ export default (sequelize) => {
         type: DataTypes.TEXT, // Use TEXT instead of STRING for longer messages
         allowNull: false, // Required field
       },
+      likes: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      dislikes: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

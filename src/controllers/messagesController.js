@@ -1,8 +1,5 @@
 import dotenv from 'dotenv';
 import db from '../database/models/index.js';
-
-//const Message = db.message;
-
 dotenv.config();
 
 const createMessage = async (req, res) => {
@@ -127,7 +124,6 @@ const like_message = async (req, res) => {
     const message = await db.Message.findByPk(id);
     console.log(message);
     if (!message) return res.status(404).json({ error: 'Message not found' });
-    console.log("The likes for this message are ",message.likes)
     message.likes += 1;
     await message.save();
     res.json({ message: 'Liked!', data: message });

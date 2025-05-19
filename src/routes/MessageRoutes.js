@@ -6,7 +6,7 @@ router.post('/messages',createMessage);
 router.get('/messages',getAllMessages);
 router.delete('/messages/:id',deleteMessage);
 router.put('/messages/:id',editMessage);
-router.put('/messages/:id/like',like_message);
+router.patch('/messages/:id/like',like_message);
 router.put('/messages/:id/dislike',dislike_message);
 
 export default router;

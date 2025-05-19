@@ -40,7 +40,7 @@ const createMessage = async (req, res) => {
 const getAllMessages = async (req, res) => {
     try {
       const messages = await db.Message.findAll({
-        attributes: ['id', 'firstName', 'lastName','email', 'telephone', 'message','createdAt'], // Include the fields you want to retrieve
+        attributes: ['id', 'firstName', 'lastName','email', 'telephone', 'message','likes','dislikes','createdAt'], // Include the fields you want to retrieve
         order: [['createdAt', 'DESC']], // Sort by latest messages first
       });
   
@@ -121,10 +121,13 @@ const editMessage = async (req, res) => {
 };
 //Like a message controller
 const like_message = async (req, res) => {
+  console.log("I am hiiting the backend")
   try {
-    const message = await db.message.findByPk(req.params.id);
+    const { id } = req.params;
+    const message = await db.Message.findByPk(id);
+    console.log(message);
     if (!message) return res.status(404).json({ error: 'Message not found' });
-
+    console.log("The likes for this message are ",message.likes)
     message.likes += 1;
     await message.save();
     res.json({ message: 'Liked!', data: message });
@@ -135,7 +138,7 @@ const like_message = async (req, res) => {
 //dislike a method
 const dislike_message = async (req, res) => {
   try {
-    const message = await db.message.findByPk(req.params.id);
+    const message = await db.Message.findByPk(req.params.id);
     if (!message) return res.status(404).json({ error: 'Message not found' });
 
     message.dislikes += 1;

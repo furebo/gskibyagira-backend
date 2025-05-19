@@ -35,11 +35,11 @@ module.exports = {
       },
       likes: {
         type: Sequelize.INTEGER,
-        allowNull:true
+        allowNull:false
       },
       dislikes: {
         type: Sequelize.INTEGER,
-        allowNull:true
+        allowNull:false
       },
       createdAt: {
         allowNull: false,

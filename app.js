@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 //Apply CORS Middleware First
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow only this frontend
+    origin: "https://gskibyagiraburuhukiro.netlify.app", // Allow only this frontend
     methods: "GET,POST,PUT,DELETE,PATCH", // Allow necessary HTTP methods
     allowedHeaders: "Content-Type,Authorization", // Allow these headers
   })

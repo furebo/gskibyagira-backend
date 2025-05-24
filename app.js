@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', routes);
 
 //Database Connection in Production
-const isProduction = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
 if (isProduction || !isProduction) {
     connectToDatabase()
     .then(() => {

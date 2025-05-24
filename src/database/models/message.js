@@ -4,7 +4,8 @@ import { Model, DataTypes } from 'sequelize';
 export default (sequelize) => {
   class Message extends Model {
     static associate(models) {
-      // Define associations here if needed
+  // A message can have many comments
+ 
     }
   }
 

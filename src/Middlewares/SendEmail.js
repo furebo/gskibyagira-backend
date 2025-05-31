@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 });
    // Sending email
 const mailOptions = {
-  from: `GS KIBYAGIRA_LMIS <${process.env.EMAIL_USER}`, // Sender email address
+  from: `GS KIBYAGIRA_BURUHKIRO_LMIS <${process.env.EMAIL_USER}`, // Sender email address
   to: email,       // Receiver email address
   subject: emailsubject,
   html: template(firstname,token),

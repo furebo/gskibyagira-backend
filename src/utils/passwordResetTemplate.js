@@ -107,7 +107,7 @@ export const template = (firstname, token, message = msg, action = act) => {
           </a>
           <p class="footer_text">
               If you encounter any problem, please don't hesitate to CONTACT US at
-              <span style="color:#424242"><a href="gskibyagira@gmail.com">gskibyagira@gmail.com</a></span>
+              <span style="color:#424242"><a href="gskibyagirabmis@gmail.com">gskibyagirabmis@gmail.com</a></span>
           </p>
           <footer>
               <p>

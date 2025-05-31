@@ -2,7 +2,7 @@ const msg = 'Please click the link below to verify your email';
 const act = 'Verify Email now';
 
 export const template = (firstname, token, message = msg, action = act) => {
-  const link = token ? `https://gskibyagira-backend.onrender.com/api/users/verifyuser/${token}` : "https://gskibyagiraburuhukiro.netlify.app";
+  const link = token ? `http://gskibyagira-backend.onrender.com/api/users/verifyuser/${token}` : "https://gskibyagiraburuhukiro.netlify.app";
   return `<head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,7 +107,7 @@ export const template = (firstname, token, message = msg, action = act) => {
           </a>
           <p class="footer_text">
               If you encounter any problem, please don't hesitate to CONTACT US at
-              <span style="color:#424242"><a href="gskibyagira@gmail.com">gskibyagira@gmail.com</a></span>
+              <span style="color:#424242"><a href="gskibyagirabmis@gmail.com">gskibyagirabmis@gmail.com</a></span>
           </p>
           <footer>
               <p>

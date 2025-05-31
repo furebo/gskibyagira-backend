@@ -2,7 +2,7 @@ const msg = 'Please click the link below to verify your email';
 const act = 'Verify Email now';
 
 export const template = (firstname, token, message = msg, action = act) => {
-  const link = token ? `http://gskibyagira-backend.onrender.com/api/users/verifyuser/${token}` : "https://gskibyagiraburuhukiro.netlify.app";
+  const link = token ? `https://gskibyagira-backend.onrender.com/api/users/verifyuser/${token}` : "https://gskibyagiraburuhukiro.netlify.app";
   return `<head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

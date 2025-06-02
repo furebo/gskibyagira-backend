@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
       lastName,
       email,
       hashedPassword, // Use password, not hashedPassword
-      role
+      role:'Teacher'
     });
 
     //  Generate JWT Token

@@ -112,8 +112,8 @@ export const template = (firstname, token, message = msg, action = act) => {
           <footer>
               <p>
                   <span>Kigali, Rwanda</span><br />
-                  <span><b> (+250) 783323950</b></span><br />
-              </p>
+                  <span><b> (+250) 783323950, (+250) 784450008</b></span><br />
+              </p>ssss
               &copy; GS Kibyagira Buruhukiro - All Rights Reserved.
           </footer>
       </section>

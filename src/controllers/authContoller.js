@@ -44,7 +44,7 @@ export async function googleLogin(req, res) {
 
         // Generate JWT token for authentication
         const authToken = jwt.sign(
-            { id: user.id, email: user.email, role:"other" },
+            { id: user.id, email: user.email, role:user.role },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );

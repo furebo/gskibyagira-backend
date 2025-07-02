@@ -238,7 +238,8 @@ const loginUser = async (req, res) => {
     );
 
     // Return the token to the client
-    res.status(200).json({ message: 'Login successful', token });
+    console.log(user);
+    res.status(200).json({ message: 'Login successful', token, user});
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

@@ -10,15 +10,15 @@ const config = process.env.DATABASE_URL ? parse(process.env.DATABASE_URL) : {};
 
 export default {
   development: {
-    username: "postgres",
-    password: "furebo123",
-    database: "lmis",
-    host: "localhost",
-    dialect: "postgres",
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    host: process.env.HOST,
+    dialect: process.env.DIALECT,
   },
   test: {
     url: process.env.DATABASE_URL,
-    dialect: 'postgres',
+    dialect: process.env.DIALECT,
     dialectOptions: {
       ssl: {
         require: true,

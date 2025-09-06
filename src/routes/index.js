@@ -10,6 +10,7 @@ import userLoginRoutes from './UserLoginRoutes.js'
 import requestPasswordResetRoute from './RequestPasswordReset.js';
 import resetPasswordRoute from './ResetPasswordRoute.js';
 import commentsRoutes from './commentsRoutes.js';
+import teacherFileRoutes from './teacherFileRoutes.js';
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use('/',userLoginRoutes);
 router.use('/reset',requestPasswordResetRoute);
 router.use('/',resetPasswordRoute);
 router.use('/',commentsRoutes);
+router.use('/',teacherFileRoutes);
 
 export default router;

@@ -9,6 +9,11 @@ export default (sequelize) => {
      */
     static associate(models) {
       // define association here
+           // One user has many files
+      user.hasMany(models.file, {
+        foreignKey: 'userId',
+        as: 'files',
+      });
     }
   }
   user.init({

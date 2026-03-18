@@ -5,9 +5,9 @@ dotenv.config();
 
 const createBook = async (req, res) => {
   try {
-    const { booktype, booklevel, bookcode, bookauthor, deliverydate } = req.body;
+    const { booktype, booklevel, bookcode, bookauthor,books_quantity,deliverydate } = req.body;
 
-    if (!booktype || !booklevel || !bookcode || !bookauthor || !deliverydate) {
+    if (!booktype || !booklevel || !bookcode || !bookauthor || !books_quantity || !deliverydate) {
       return res.status(400).json({
         message: "All fields are required.",
       });
@@ -18,9 +18,10 @@ const createBook = async (req, res) => {
       booklevel,
       bookcode,
       bookauthor,
+      books_quantity,
       deliverydate,
     });
-    console.log(data);
+    //console.log(data);
     return res.status(201).json({
       message: "The book is successfully registered.",
       data,

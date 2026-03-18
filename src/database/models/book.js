@@ -23,6 +23,9 @@ export default (sequelize) => {
     booklevel: DataTypes.STRING,
     bookcode: DataTypes.STRING,
     bookauthor: DataTypes.STRING,
+    books_quantity: {
+      type: DataTypes.INTEGER
+   }  ,
     deliverydate: DataTypes.DATE
   }, {
     sequelize,

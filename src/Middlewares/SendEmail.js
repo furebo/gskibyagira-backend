@@ -20,7 +20,7 @@ export const sendVerificationEmail = async (firstname, email, token,emailsubject
   try {
   oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 // Generate access token
-const accessToken = await oauth2Client.getAccessToken();
+const {token}= await oauth2Client.getAccessToken();
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -31,12 +31,12 @@ const transporter = nodemailer.createTransport({
     clientId: process.env.CLIENT_ID,      // Client ID from Developer Console
     clientSecret: process.env.CLIENT_SECRET,  // Client Secret from Developer Console
     refreshToken: REFRESH_TOKEN,
-    accessToken: accessToken,       // Access token generated from OAuth2
+    accessToken: token,       // Access token generated from OAuth2
   },
 });
    // Sending email
 const mailOptions = {
-  from: `GS KIBYAGIRA_BURUHUKIRO_BMIS <${process.env.EMAIL_USER}`, // Sender email address
+  from: `GS KIBYAGIRA_BURUHUKIRO_BMIS <${process.env.EMAIL_USER}>`, // Sender email address
   to: email,       // Receiver email address
   subject: emailsubject,
   html: template(firstname,token),

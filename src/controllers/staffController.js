@@ -7,6 +7,11 @@ const CreateStaff = async (req, res) => {
     console.log("I am hitting the endpoint")
     // Use multer to handle file upload
     upload(req, res, async (err) => {
+      if (err.code === "LIMIT_FILE_SIZE") {
+         return res.status(400).json({
+          error: "File too large. Maximum allowed size is 2MB"
+        });
+      }
       if (err) {
         return res.status(400).json({ error: err.message });
       }

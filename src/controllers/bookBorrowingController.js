@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import db from '../database/models/index.js';
 import Sequelize from 'sequelize';
+import { Op } from "sequelize";
 
 //const BookBorrowing = model.bookborrowing;
 
@@ -43,15 +44,53 @@ const BorrowBook =  async (req, res) => {
 
 const allBorrowedBooks = async (req,res)=>{
     try {
-      const response = await db.bookborrowing.findAll();
+      const page = Number(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page -1) * limit;
+      const search = req.query.search || "";
+      const year = req.query.year || "";
+      const where = {};
 
-      if(response){
-        console.log(response)
-        return res.status(200).json({
-          message:"Borrowed books found well",
-          data:response
-        })
+      if (search) {
+
+            where.Student_Name = {
+
+                [Op.iLike]: `%${search}%`
+
+            };
+
+        }
+
+       if (year) {
+        const [startYear, endYear] = year.split(" - ").map(Number);
+        const academicStart = new Date(`${startYear}-09-01`);
+        const academicEnd = new Date(`${endYear}-07-31T23:59:59`);
+        
+        where.Borrowing_Date = {
+          [Op.between]: [academicStart, academicEnd]
+        };
       }
+
+
+      const {count, rows} = await db.bookborrowing.findAndCountAll({
+        where,
+        limit,
+        offset,
+        order: [
+          ["Borrowing_Date", "DESC"]
+        ]
+      });
+      
+    
+        return res.status(200).json({
+          message:"Borrowed books found successfully",
+          currentPage: page,
+          pageSize: limit,
+          totalRecords: count,
+          totalPages: Math.ceil(count / limit),
+          data: rows
+        })
+      
       return res.status(404).json({message:"No records found"})
     } catch (err) {
       res.status(500).json({

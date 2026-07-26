@@ -35,8 +35,8 @@ if (isProduction || !isProduction) {
       console.log('Connected to the database');
       
       app.get("/", (req, res) => {
-  res.send("Backend API is running");
-});
+        res.send("Backend API is running");
+      });
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
       });

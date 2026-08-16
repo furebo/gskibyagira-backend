@@ -1,5 +1,5 @@
 import express from 'express';
-import { BorrowBook, allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType } from '../controllers/bookBorrowingController.js';
+import { BorrowBook, allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType,getNotSubmittedBorrowedBooks } from '../controllers/bookBorrowingController.js';
 
 
 const router = express.Router();
@@ -9,4 +9,5 @@ router.get('/borrowbook',allBorrowedBooks);
 router.delete('/borrowbook/:id',deleteBorrowedBook);
 router.put('/borrowbook/:id',updateBorrowedBook);
 router.get('/allborrowedbytype',allBorrowedBooksByType);
+router.get('/allnotsubmittedbooks',getNotSubmittedBorrowedBooks);
 export default router;

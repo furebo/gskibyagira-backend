@@ -166,4 +166,31 @@ const updateBorrowedBook = async (req, res) => {
     }
 };
 
-export {BorrowBook,allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType}
+const getNotSubmittedBorrowedBooks = async (req, res) => {
+  try {
+    const count = await db.bookborrowing.count({
+      where: {
+        Status: 'Not Submitted'
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      totalNotSubmittedBorrowedBooks: count
+    });
+
+  } catch (error) {
+    console.error(
+      'Error counting not submitted borrowed books:',
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to get not submitted borrowed books',
+      error: error.message
+    });
+  }
+};
+
+export {BorrowBook,allBorrowedBooks,deleteBorrowedBook,updateBorrowedBook,allBorrowedBooksByType,getNotSubmittedBorrowedBooks}

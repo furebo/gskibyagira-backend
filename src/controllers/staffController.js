@@ -142,7 +142,7 @@ const deleteStaff = async (req, res) => {
       }
   
       // Delete the staff
-      await staff.destroy({ where: { id } });
+      await db.staff.destroy({ where: { id } });
   
       return res.status(200).json({
         message: "Staff record deleted successfully."

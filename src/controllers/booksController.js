@@ -38,7 +38,7 @@ const createBook = async (req, res) => {
 const getAllBooks = async (req, res) => {
   try {
     const books = await db.book.findAll({
-      attributes: ['id', 'booktype', 'booklevel', 'bookcode', 'bookauthor','deliverydate'], // Include the fields you want to retrieve
+      attributes: ['id', 'booktype', 'booklevel', 'bookcode', 'books_quantity', 'bookauthor','deliverydate'], // Include the fields you want to retrieve
     });
 
     if (books.length === 0) {

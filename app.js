@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 //https://gskibyagiraburuhukiro.netlify.app
+
 //Apply CORS Middleware First
 app.use(
   cors({

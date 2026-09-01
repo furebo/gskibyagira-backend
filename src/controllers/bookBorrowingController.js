@@ -42,62 +42,75 @@ const BorrowBook =  async (req, res) => {
   }
 };
 
-const allBorrowedBooks = async (req,res)=>{
-    try {
-      const page = Number(req.query.page) || 1;
-      const limit = 10;
-      const offset = (page -1) * limit;
-      const search = req.query.search || "";
-      const year = req.query.year || "";
-      const where = {};
+const allBorrowedBooks = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
 
-      if (search) {
+    const search = req.query.search || "";
+    const year = req.query.year || "";
+    const all = req.query.all === "true";
 
-            where.Student_Name = {
+    const where = {};
 
-                [Op.iLike]: `%${search}%`
-
-            };
-
-        }
-
-       if (year) {
-        const [startYear, endYear] = year.split(" - ").map(Number);
-        const academicStart = new Date(`${startYear}-09-01`);
-        const academicEnd = new Date(`${endYear}-07-31T23:59:59`);
-        
-        where.Borrowing_Date = {
-          [Op.between]: [academicStart, academicEnd]
-        };
-      }
-
-
-      const {count, rows} = await db.bookborrowing.findAndCountAll({
-        where,
-        limit,
-        offset,
-        order: [
-          ["Borrowing_Date", "DESC"]
-        ]
-      });
-      
-    
-        return res.status(200).json({
-          message:"Borrowed books found successfully",
-          currentPage: page,
-          pageSize: limit,
-          totalRecords: count,
-          totalPages: Math.ceil(count / limit),
-          data: rows
-        })
-      
-      return res.status(404).json({message:"No records found"})
-    } catch (err) {
-      res.status(500).json({
-        error:err.message
-      })
+    if (search) {
+      where.Student_Name = {
+        [Op.iLike]: `%${search}%`
+      };
     }
-}
+
+    if (year) {
+      const [startYear, endYear] = year
+        .split(" - ")
+        .map(Number);
+
+      const academicStart = new Date(
+        `${startYear}-09-01T00:00:00`
+      );
+
+      const academicEnd = new Date(
+        `${endYear}-09-01T00:00:00`
+      );
+
+      where.Borrowing_Date = {
+        [Op.gte]: academicStart,
+        [Op.lt]: academicEnd
+      };
+    }
+
+    const queryOptions = {
+      where,
+      order: [
+        ["Borrowing_Date", "DESC"]
+      ]
+    };
+
+    // Only paginate normal requests
+    if (!all) {
+      queryOptions.limit = limit;
+      queryOptions.offset = offset;
+    }
+
+    const { count, rows } =
+      await db.bookborrowing.findAndCountAll(queryOptions);
+
+    return res.status(200).json({
+      message: "Borrowed books found successfully",
+      currentPage: all ? 1 : page,
+      pageSize: all ? rows.length : limit,
+      totalRecords: count,
+      totalPages: all ? 1 : Math.ceil(count / limit),
+      data: rows
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
 //controller to get the borrowed books grouped by bookType 
 const allBorrowedBooksByType = async (req, res) => {
   try {
